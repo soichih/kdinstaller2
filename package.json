@@ -1,0 +1,16 @@
+{
+  "name": "kdinstall2",
+  "version": "2.0.0",
+  "description": "Karst Desktop Installer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soichih/kdinstall2.git"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.3.0"
+  }
+}
