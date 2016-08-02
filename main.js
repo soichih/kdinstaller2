@@ -10,26 +10,28 @@ const shell = electron.shell;
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+    // Create the browser window.
+    mainWindow = new BrowserWindow({width: 500, height: 370, resizable: true, maximizable: false})
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+    //get rid of default electron menubar
+    mainWindow.setMenu(null);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+    // and load the index.html of the app.
+    mainWindow.loadURL(`file://${__dirname}/index.html`)
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+    // Open the DevTools by default..
+    //mainWindow.webContents.openDevTools()
 
-console.dir(shell);
-//shell.writeShortcutLink("/opt/thinlinc/bin/tlclient");
-shell.beep();
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function () {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null
+    })
+
+    //this api is coming down the pipe, I believe
+    //shell.writeShortcutLink("/opt/thinlinc/bin/tlclient");
 }
 
 // This method will be called when Electron has finished
@@ -49,10 +51,17 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
+  if (mainWindow === null) createWindow();
 })
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+electron.ipcMain.on('show-console', function(e) {
+    mainWindow.webContents.openDevTools();
+});
+electron.ipcMain.on('quit', function() {
+    //console.log("quit request");
+    app.quit();
+});
+

@@ -1,19 +1,101 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+<html ng-app="kdinstaller">
+    <head>
+        <title>Karst Desktop Client Installer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body ng-controller="kdinstallerController as $ctrl">
+        <!--
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="#">Karst Desktop Client Installer</a>
+                </div>
+            </div>
+        </nav>
+        -->
+        <br>
 
-  <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
-  </script>
+        <div class="container">
+            <div ng-if="page == 'about'">
+                <p>This program will walk you through steps to install and configure Karst Desktop Client.</p>
+                <p>Please enter your IU username / passphrase.</p>
+                <form ng-submit="submit(username, password)" name="userpass">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <img src="images/iulogo.png" style="" height="18">
+                            </span>
+                            <input type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
+                            </span>
+                            <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn pull-right" ng-disabled="userpass.$invalid">Install</button>
+                </form>
+            </div>
+
+            <div ng-if="page == 'run'">
+                <progress-status detail="progress_detail.sshkey">Generate and Install SSH Keys</progress-status>
+                <progress-status detail="progress_detail.download">Download ThinLink Client</progress-status>
+                <progress-status detail="progress_detail.install">Install ThinLink Client</progress-status>
+                <progress-status detail="progress_detail.configure">Configure ThinLink Client</progress-status>
+                <progress-status detail="progress_detail.desktop">Install Desktop Launcher</progress-status>
+            </div>
+
+            <div ng-if="page == 'error'" class="panel panel-danger">
+                <div class="panel-heading"><h3 class="panel-title">Oops!</h3></div>
+                <div class="panel-body">
+                    <p>{{message}}</p>
+                    <p style="padding: 15px; background-color: #ccc;" ng-if="message_detail.message">{{message_detail.message}}</p>
+                    <pre ng-if="!message_detail.message">{{message_detail|json}}</pre>
+                    <button type="button" class="btn btn-danger" ng-click="gopage('about')">Back</button>
+                </div>
+            </div>
+
+            <div ng-if="page == 'finish'" class="panel panel-success">
+                <div class="panel-heading"><h3 class="panel-title">Installed Successfully!</h3></div>
+                <div class="panel-body">
+                    <!--<p>You can now launch Karst Desktop through a desktop shortcut.</p>-->
+                    <p>You can launch ThinLinc client in order to access Karst Desktop now.</p>
+                    <button type="button" class="btn btn-success" ng-click="launch_tl()">Launch Karst Desktop</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+            <div class="iulogo"></div>
+            <p>INDIANA UNIVERSITY | SciApt 
+            <span class="pull-right clickable" onclick="open_devtool()">
+            <script>
+            let pkginfo = require('./package.json');
+            document.write(pkginfo.version);
+            </script>
+            </span></p>
+            </div>
+        </footer>
+    </body>
+
+    <script>
+    //using <script> doesn't load jquery properly //http://stackoverflow.com/a/38556376/99330
+    window.jQuery = window.$ = require('./lib/jquery-3.1.0.min.js');
+    require('./lib/bootstrap-3.3.7.min.js');
+    require('./lib/angular-1.5.6.min.js');
+    require('./app.js');
+
+    //for debugging..
+    console.log("version");
+    console.dir(process.versions);
+    </script>
 </html>

@@ -1,0 +1,69 @@
+body {
+/*font-family: 'Lato', sans-serif;*/
+}
+
+.clickable {
+  cursor: pointer;
+}
+hr {
+margin-top: 7px;
+margin-bottom: 10px;
+}
+
+footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    background-color: #7d110c;
+    color: white;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+footer .iulogo {
+    position: absolute;
+    top: -10px;
+    width: 43px;
+    height: 50px;
+    background-image: url('images/block-iu-top-43x40.png');
+    background-repeat: no-repeat;
+    background-color: #960D00;
+}
+footer p {
+    margin-left: 50px;
+}
+/*
+.ng-valid[required] {
+  border-left: 5px solid #42A948; 
+}
+
+.ng-invalid {
+  border-left: 5px solid #960D00;
+}
+
+.fa-check {
+  color: #449d44;
+  font-size: 150%;
+}
+*/
+
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  animation: rotating 2s linear infinite;
+}
+
