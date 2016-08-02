@@ -145,8 +145,8 @@ app.controller('kdinstallerController', function($scope, sca) {
     case "win32":
         $scope.installer_name = "windows.zip";
         $scope.download_path = os.tmpdir() + '/' + $scope.installer_name;
-        $scope.programfiles_dir = child_process.execSync("echo %programfiles%", { encoding: 'utf8' }).trim();
-        $scope.install_dir = programfiles_dir + "\\ThinLinc";
+        var programfiles_dir = child_process.execSync("echo %programfiles(x86)%", { encoding: 'utf8' }).trim();
+        var install_dir = programfiles_dir + "\\ThinLinc Client";
         $scope.install_cmd = "powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('" + $scope.download_path + "', '" + install_dir + "'); }\"";
         $scope.tlclient_path = install_dir + "\\tlclient.exe";
         $scope.logo_path = install_dir + "\\branding.png"; //TODO - not sure where this go yet..
