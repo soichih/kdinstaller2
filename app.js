@@ -245,6 +245,7 @@ app.controller('kdinstallerController', function($scope, sca) {
                     $scope.error("Failed to download client", err);
                 })
                 .on('end', function() {
+                    $scope.progress("download", "finished", "Downloaded");
                     next();
                 })
                 .pipe(fs.createWriteStream($scope.download_path));
@@ -285,12 +286,11 @@ app.controller('kdinstallerController', function($scope, sca) {
     };
 
     function run() {
-        //$scope.progress("sshkey", "running", "Generating / installing sshkey");
         async.series([
             mkdir_ssh,
             request_sshkeys,
             store_local_sshkeys,
-            //function (next) { return store_remote_sshkeys(next); }, //today is maintenance day!
+            store_remote_sshkeys,
             function (next) { 
                 $scope.progress("sshkey", "finished", "Installed successfully");
                 next();
@@ -321,6 +321,7 @@ app.controller('kdinstallerController', function($scope, sca) {
                 //TODO - once shell.writeShortcutLink becomes available, use it instead.
                 switch (os.platform()) {
                 case "linux":
+                    //TODO.. let's assume user is using gnome simply by looking for ~/Desktop
                     fs.access(get_homedir()+"/Desktop", fs.F_OK, function(err){
                         if(err) {
                             $scope.progress("desktop", "skipped");
@@ -345,6 +346,21 @@ app.controller('kdinstallerController', function($scope, sca) {
                                 next();
                             });
                         });
+                    });
+                    break;
+                case "win32":
+                    //create vbs script to create desktop..
+                    var vbs = "Set wsc = WScript.CreateObject(\"WScript.Shell\")\n";
+                    vbs += "Set lnk = wsc.CreateShortcut(wsc.SpecialFolders(\"desktop\") & \"\\Karst Desktop.LNK\")\n";
+                    vbs += "lnk.targetpath = \""+$scope.tlclient_path+"\"\n";
+                    vbs += "lnk.description = \"Karst Desktop Client\"\n";
+                    vbs += "lnk.save\n";
+                    var path = os.tmpdir()+"/kd.desktop.vbs";
+                    fs.writeFile(path, vbs, function(err) {
+                        if(err) return next(err); 
+                        //then run it..
+                        child_process.execSync(path);
+                        next();
                     });
                     break;
                 default:
