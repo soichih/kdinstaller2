@@ -21,7 +21,9 @@
 
         <div class="container"ng-cloak>
             <div ng-if="page == 'about'">
-                <p>This program will walk you through steps to install and configure Karst Desktop Client.</p>
+                <img src="images/kdlogo.png" align="right" style="padding: 0 20px 10px 20px;">
+                <p>This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
+                <br clear="both">
                 <p>Please enter your IU username / passphrase.</p>
                 <form ng-submit="submit(username, password)" name="userpass">
                     <div class="form-group">
@@ -40,8 +42,7 @@
                             <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
                         </div>
                     </div>
-                    <hr>
-                    <button type="submit" class="btn pull-right" ng-disabled="userpass.$invalid">Install</button>
+                    <button type="submit" class="btn btn-lg pull-right" ng-disabled="userpass.$invalid">Install</button>
                 </form>
             </div>
 
