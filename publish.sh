@@ -41,5 +41,8 @@ cp packed/tl-$version-clients/client-linux-rpm/*.x86_64.rpm $pubdir/thinlinc/lin
 (cd packed && tar -cz kdinstall2-darwin-x64 > $pubdir/kdinstall/kdinstall2-darwin-x64.tar.gz)
 #winstaller.js takes care of publishing windows.exe
 
+#echo "to create sfx archive for windows, run 7-zip on windows and create sfx there.."
+
 echo "running winstaller.js - may take for a while"
 ./winstaller.js
+
