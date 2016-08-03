@@ -4,6 +4,12 @@ pubdir=/home/hayashis/Dropbox/Public
 
 ###################################################################################################
 #
+#  electron-packager
+#
+electron-packager . --all --out=packed --overwrite --prune
+
+###################################################################################################
+#
 #  install thinlinc cache
 #
 
@@ -34,3 +40,6 @@ cp packed/tl-$version-clients/client-linux-rpm/*.x86_64.rpm $pubdir/thinlinc/lin
 (cd packed && tar -cz kdinstall2-linux-x64 > $pubdir/kdinstall/kdinstall2-linux-x64.tar.gz)
 (cd packed && tar -cz kdinstall2-darwin-x64 > $pubdir/kdinstall/kdinstall2-darwin-x64.tar.gz)
 #winstaller.js takes care of publishing windows.exe
+
+echo "running winstaller.js - may take for a while"
+./winstaller.js

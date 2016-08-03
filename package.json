@@ -4,8 +4,7 @@
   "description": "Karst Desktop Installer",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "pack": "electron-packager . --all --out=packed --overwrite --prune"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",

@@ -163,9 +163,9 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     case "darwin":
         $scope.installer_name = "osx.tar.gz";
         $scope.download_path = os.tmpdir() + '/' + $scope.installer_name;
-        $scope.install_cmd = "tar -xzf " + $scope.download_path + " -C /Applications";
+        $scope.install_cmd = "tar --no-same-owner -xzf " + $scope.download_path + " -C /Applications";
         $scope.logo_path = "/Applications/ThinLinc Client/Contents/lib/tlclient/branding.png";
-        $scope.tlclient_path = "/Applications/ThinLinc Client/Contents/MacOS/tlclient";
+        $scope.tlclient_path = "/Applications/ThinLinc Client.app/Contents/MacOS/tlclient";
         break;
     default:
         $scope.error('Unsupported Platform: '+os.platform());
@@ -390,6 +390,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     $scope.launch_tl = function() {
+       console.log($scope.tlclient_path);
        child_process.spawn($scope.tlclient_path, { detached: true });
        electron.ipcRenderer.send('quit');
     }
