@@ -20,6 +20,10 @@ const scapath = "https://test.sca.iu.edu/api";
 //TODO maybe I should host this on IU server?
 const client_cache = "https://dl.dropboxusercontent.com/u/3209692/thinlinc/";
 
+//debug
+console.log("version");
+console.dir(process.versions);
+
 window.open_devtool = function() {
     console.log("opening console");
     electron.ipcRenderer.send('show-console');
@@ -76,7 +80,7 @@ app.component('progressStatus', {
     `,
 });
 
-app.controller('kdinstallerController', function($scope, sca) {
+app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     $scope.gopage = (p) => {
         console.log("gopage:"+p);
@@ -84,8 +88,13 @@ app.controller('kdinstallerController', function($scope, sca) {
 
         //run things when page changes
         switch(p) {
-        case "about": progress_reset(); break;
-        case "run": run(); break;
+        case "about": 
+            progress_reset(); 
+            $timeout(() => $("#username").focus());
+            break;
+        case "run": 
+            run(); 
+            break;
         }
         if(!$scope.$$phase) $scope.$apply(); //people say don't do this.. but..
     }

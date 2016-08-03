@@ -4,8 +4,8 @@
         <title>Karst Desktop Client Installer</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="styles.css">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link href="styles.css" rel="stylesheet">
     </head>
     <body ng-controller="kdinstallerController as $ctrl">
         <!--
@@ -19,7 +19,7 @@
         -->
         <br>
 
-        <div class="container">
+        <div class="container"ng-cloak>
             <div ng-if="page == 'about'">
                 <p>This program will walk you through steps to install and configure Karst Desktop Client.</p>
                 <p>Please enter your IU username / passphrase.</p>
@@ -29,7 +29,7 @@
                             <span class="input-group-addon">
                                 <img src="images/iulogo.png" style="" height="18">
                             </span>
-                            <input type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
+                            <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
                         </div>
                     </div>
                     <div class="form-group">
@@ -88,14 +88,11 @@
     </body>
 
     <script>
-    //using <script> doesn't load jquery properly //http://stackoverflow.com/a/38556376/99330
-    window.jQuery = window.$ = require('./lib/jquery-3.1.0.min.js');
-    require('./lib/bootstrap-3.3.7.min.js');
-    require('./lib/angular-1.5.6.min.js');
-    require('./app.js');
-
-    //for debugging..
-    console.log("version");
-    console.dir(process.versions);
+        //using <script> doesn't load jquery properly //http://stackoverflow.com/a/38556376/99330
+        window.jQuery = window.$ = require('./lib/jquery-1.12.4.min.js');
     </script>
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="app.js"></script>
 </html>
