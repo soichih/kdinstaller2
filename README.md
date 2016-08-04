@@ -1,6 +1,6 @@
 # kdinstaller2
 
-**Clone and run for a quick way to see an Electron in action.**
+**If you are building winstaller binary, you need mono and wine**
 
 This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/latest/tutorial/quick-start) within the Electron documentation.
 
