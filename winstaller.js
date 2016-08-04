@@ -10,7 +10,6 @@ resultPromise = electronInstaller.createWindowsInstaller({
     outputDirectory: '/home/hayashis/Dropbox/Public/kdinstall',
     authors: 'IU / SciApt',
     exe: 'kdinstall2.exe',
-    loadingGif: null,
     setupExe: 'kdinstall2.exe',
 });
 
