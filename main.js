@@ -4,79 +4,23 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const shell = electron.shell;
 
-// this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
-    // squirrel event handled and app will exit in 1000ms, so don't do anything else
     return;
 }
-
 function handleSquirrelEvent() {
 
     if (process.argv.length === 1) {
-        return false;
+    return false;
     }
-
-    /*
-  const ChildProcess = require('child_process');
-  const path = require('path');
-
-  const appFolder = path.resolve(process.execPath, '..');
-  const rootAtomFolder = path.resolve(appFolder, '..');
-  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-  const exeName = path.basename(process.execPath);
-
-  const spawn = function(command, args) {
-    let spawnedProcess, error;
-
-    try {
-      spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-    } catch (error) {}
-
-    return spawnedProcess;
-  };
-
-  const spawnUpdate = function(args) {
-    return spawn(updateDotExe, args);
-  };
-    */
-
-  const sqevent = process.argv[1];
-  switch (sqevent) {
+    const sqevent = process.argv[1];
+    switch (sqevent) {
     case '--squirrel-install':
     case '--squirrel-updated':
-        /*
-      // Optionally do things such as:
-      // - Add your .exe to the PATH
-      // - Write to the registry for things like file associations and
-      //   explorer context menus
-
-      // Install desktop and start menu shortcuts
-      spawnUpdate(['--createShortcut', exeName]);
-      setTimeout(app.quit, 1000);
-        */
-
-      app.quit();
-      return true;
-
     case '--squirrel-uninstall':
-      // Undo anything you did in the --squirrel-install and
-      // --squirrel-updated handlers
-
-      // Remove desktop and start menu shortcuts
-      //spawnUpdate(['--removeShortcut', exeName]);
-
-      //setTimeout(app.quit, 1000);
-      app.quit();
-      return true;
-
     case '--squirrel-obsolete':
-      // This is called on the outgoing version of your app before
-      // we update to the new version - it's the opposite of
-      // --squirrel-updated
-
-      app.quit();
-      return true;
-  }
+        app.quit();
+        return true;
+    }
 };
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -85,7 +29,7 @@ let mainWindow
 
 function createWindow () {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 500, height: 390, resizable: true, maximizable: false})
+    mainWindow = new BrowserWindow({width: 500, height: 410, resizable: true, maximizable: false})
 
     //get rid of default electron menubar
     mainWindow.setMenu(null);
