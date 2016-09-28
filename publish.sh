@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#publishes to https://www.dropbox.com/sh/q7qib7yczlv21hq/AADZwwBtE7NKpoju76FwhkxPa?dl=0
+
 pubdir=/home/hayashis/Dropbox/Public
 
 ###################################################################################################
@@ -44,5 +46,5 @@ cp packed/tl-$version-clients/client-linux-rpm/*.x86_64.rpm $pubdir/thinlinc/lin
 #echo "to create sfx archive for windows, run 7-zip on windows and create sfx there.."
 
 echo "running winstaller.js - may take for a while"
-./winstaller.js
+time ./winstaller.js
 

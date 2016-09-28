@@ -21,29 +21,40 @@
 
         <div class="container"ng-cloak>
             <div ng-if="page == 'about'">
-                <img src="images/kdlogo.png" align="right" style="padding: 0 20px 10px 20px;">
-                <p>This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
+                <img src="images/kdlogo.png" align="right" style="padding: 0 20px 10px 20px;" width="130px">
+                <p class="help-block">This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
                 <br clear="both">
-                <p>Please enter your IU username / passphrase.</p>
-                <form ng-submit="submit(username, password)" name="userpass">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <img src="images/iulogo.png" style="" height="18">
-                            </span>
-                            <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
-                            </span>
-                            <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-lg pull-right" ng-disabled="userpass.$invalid">Install</button>
-                </form>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form ng-submit="submit(username, password)" name="userpass">
+                            <input type="checkbox" ng-model="install_sshkey"> Install SSH keys for password-less login</input>
+
+                            <div ng-if="!install_sshkey"><br></div>
+
+                            <div ng-if="install_sshkey">
+                                <p class="help-block">Please enter your IU username / passphrase.</p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <img src="images/iulogo.png" style="" height="18">
+                                        </span>
+                                        <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
+                                        </span>
+                                        <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
+                                    </div>
+                                </div>
+                            </div><!--ng-if-->
+                            <button type="submit" class="btn pull-right" ng-disabled="userpass.$invalid">Install</button>
+                        </form>
+                     </div><!--panel-body-->
+                 </div><!--panel-->
             </div>
 
             <div ng-if="page == 'run'">

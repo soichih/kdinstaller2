@@ -23,6 +23,7 @@ const client_cache = "https://dl.dropboxusercontent.com/u/3209692/thinlinc/";
 //debug
 console.log("version");
 console.dir(process.versions);
+console.log("platform:"+os.platform());
 
 window.open_devtool = function() {
     console.log("opening console");
@@ -106,6 +107,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     //platform specific config
+    $scope.install_sshkey = false;
     $scope.installer_name = null; 
     $scope.download_path = null;
     $scope.install_cmd = null;
@@ -294,91 +296,101 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         });
     };
 
-    function run() {
-        async.series([
-            mkdir_ssh,
-            request_sshkeys,
-            store_local_sshkeys,
-            store_remote_sshkeys,
-            function (next) { 
-                $scope.progress("sshkey", "finished", "Installed successfully");
-                next();
-            },
-
-            download,
-            install,
-
-            //configure
-            function (next) { 
-                $scope.progress("configure", "running", "Configuring ThinLinc");
-                next();
-            },
-            function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); },
-            function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.username, next); },
-            function (next) { thinlinc.setConfig("PRIVATE_KEY", $scope.private_key_path, next); },
-            function (next) { thinlinc.setConfig("SERVER_NAME", "desktop.karst.uits.iu.edu", next); },
-            function (next) { thinlinc.setConfig("FULL_SCREEN_ALL_MONITORS", 0, next); },
-            function (next) { thinlinc.setConfig("FULL_SCREEN_MODE", 0, next); },
-            function (next) { thinlinc.setConfig("REMOTE_RESIZE", 1, next); },
-            function (next) { 
-                $scope.progress("configure", "finished", "Configured successfully");
-                next();
-            },
-
-            //install desktop launcher
-            function (next) { 
-                //TODO - once shell.writeShortcutLink becomes available, use it instead.
-                switch (os.platform()) {
-                case "linux":
-                    //TODO.. let's assume user is using gnome simply by looking for ~/Desktop
-                    fs.access(get_homedir()+"/Desktop", fs.F_OK, function(err){
-                        if(err) {
-                            $scope.progress("desktop", "skipped");
-                            return next();
-                        }
-                        var entry = "[Desktop Entry]\n";
-                        entry += "Name=IU Karst Desktop\n";
-                        entry += "Comment=ThinLink Client for IU Karst Desktop\n";
-                        entry += "Exec="+$scope.tlclient_path+"\n";
-                        //entry += "Icon="+$scope.logo_path+"\n";
-                        entry += "Icon=/opt/thinlinc/lib/tlclient/tlclient.svg\n";
-                        entry += "Terminal=false\n";
-                        entry += "Type=Application\n";
-                        entry += "Categories=Utility\n";
-                        console.dir(entry);
-                        var path = get_homedir()+"/Desktop/kd.desktop";
-                        fs.writeFile(path, entry, function(err) {
-                            if(err) return next(err);
-                            fs.chmod(path, '775', function(err) {
-                                if (err) return next(err);
-                                $scope.progress("desktop", "finished", "Installed desktop launcher");
-                                next();
-                            });
-                        });
-                    });
-                    break;
-                case "win32":
-                    //create vbs script to create desktop..
-                    var vbs = "Set wsc = WScript.CreateObject(\"WScript.Shell\")\n";
-                    vbs += "Set lnk = wsc.CreateShortcut(wsc.SpecialFolders(\"desktop\") & \"\\Karst Desktop.LNK\")\n";
-                    vbs += "lnk.targetpath = \""+$scope.tlclient_path+"\"\n";
-                    vbs += "lnk.description = \"Karst Desktop Client\"\n";
-                    vbs += "lnk.save\n";
-                    var path = os.tmpdir()+"/kd.desktop.vbs";
-                    fs.writeFile(path, vbs, function(err) {
-                        if(err) return next(err); 
-                        //then run it..
-                        child_process.execSync(path);
+    function install_launcher(next) {
+        //TODO - once shell.writeShortcutLink becomes available, use it instead.
+        switch (os.platform()) {
+        case "linux":
+            //TODO.. let's assume user is using gnome simply by looking for ~/Desktop
+            fs.access(get_homedir()+"/Desktop", fs.F_OK, function(err){
+                if(err) {
+                    $scope.progress("desktop", "skipped");
+                    return next();
+                }
+                var entry = "[Desktop Entry]\n";
+                entry += "Name=IU Karst Desktop\n";
+                entry += "Comment=ThinLink Client for IU Karst Desktop\n";
+                entry += "Exec="+$scope.tlclient_path+"\n";
+                //entry += "Icon="+$scope.logo_path+"\n";
+                entry += "Icon=/opt/thinlinc/lib/tlclient/tlclient.svg\n";
+                entry += "Terminal=false\n";
+                entry += "Type=Application\n";
+                entry += "Categories=Utility\n";
+                console.dir(entry);
+                var path = get_homedir()+"/Desktop/kd.desktop";
+                fs.writeFile(path, entry, function(err) {
+                    if(err) return next(err);
+                    fs.chmod(path, '775', function(err) {
+                        if (err) return next(err);
+                        $scope.progress("desktop", "finished", "Installed desktop launcher");
                         next();
                     });
-                    break;
-                default:
-                    $scope.progress("desktop", "skipped", "Skipping desktop shortcut installation");
-                    next();
-                }
-            },
+                });
+            });
+            break;
+        case "win32":
+            //create vbs script to create desktop..
+            var vbs = "Set wsc = WScript.CreateObject(\"WScript.Shell\")\n";
+            vbs += "Set lnk = wsc.CreateShortcut(wsc.SpecialFolders(\"desktop\") & \"\\Karst Desktop.LNK\")\n";
+            vbs += "lnk.targetpath = \""+$scope.tlclient_path+"\"\n";
+            vbs += "lnk.description = \"Karst Desktop Client\"\n";
+            vbs += "lnk.save\n";
+            var path = os.tmpdir()+"/kd.desktop.vbs";
+            fs.writeFile(path, vbs, function(err) {
+                if(err) return next(err); 
+                //then run it..
+                child_process.execSync(path);
+                next();
+            });
+            break;
+        default:
+            $scope.progress("desktop", "skipped", "Skipping desktop shortcut installation");
+            next();
+        }
+    }
 
-        ], function (err) {
+    function run() {
+        var tasks = [];
+        
+        if($scope.install_sshkey) {
+            tasks.push(mkdir_ssh); 
+            tasks.push(request_sshkeys);
+            tasks.push(store_local_sshkeys);
+            tasks.push(store_remote_sshkeys);
+            tasks.push(function (next) { 
+                $scope.progress("sshkey", "finished", "Installed successfully");
+                next();
+            });
+        } else {
+            tasks.push(function (next) { 
+                $scope.progress("sshkey", "skipped", "Skipped by user");
+                next();
+            });
+        }
+
+        tasks.push(download);
+        tasks.push(install);
+        tasks.push(function (next) { 
+            $scope.progress("configure", "running", "Configuring ThinLinc");
+            next();
+        });
+
+        tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); });
+        if($scope.install_sshkey) {
+            tasks.push(function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.username, next); });
+            tasks.push(function (next) { thinlinc.setConfig("PRIVATE_KEY", $scope.private_key_path, next); });
+        }
+        tasks.push(function (next) { thinlinc.setConfig("SERVER_NAME", "desktop.karst.uits.iu.edu", next); });
+        tasks.push(function (next) { thinlinc.setConfig("FULL_SCREEN_ALL_MONITORS", 0, next); });
+        tasks.push(function (next) { thinlinc.setConfig("FULL_SCREEN_MODE", 0, next); });
+        tasks.push(function (next) { thinlinc.setConfig("REMOTE_RESIZE", 1, next); });
+        tasks.push(function (next) { 
+            $scope.progress("configure", "finished", "Configured successfully");
+            next();
+        });
+        tasks.push(install_launcher);
+
+        //now run all tasks
+        async.series(tasks, function (err) {
             if (err) {
                 console.log("run failed");
                 $scope.error(null, err);
