@@ -176,9 +176,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     $scope.submit = (form) => {
-        $scope.username = form.username;
-        $scope.password = form.password;
-        $scope.install_sshkey = form.install_sshkey;
+        for(var key in form) $scope[key] = form[key];
         $scope.gopage("run");
     }
 
@@ -361,8 +359,8 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
             console.debug("user requested to install ssh key");
             tasks.push(mkdir_ssh); 
             tasks.push(request_sshkeys);
-            tasks.push(store_local_sshkeys);
             tasks.push(store_remote_sshkeys);
+            tasks.push(store_local_sshkeys);
             tasks.push(function (next) { 
                 $scope.progress("sshkey", "finished", "Installed successfully");
                 next();
@@ -385,6 +383,8 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
             tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); });
             tasks.push(function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.username, next); });
             tasks.push(function (next) { thinlinc.setConfig("PRIVATE_KEY", $scope.private_key_path, next); });
+        } else {
+            tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "password", next); });
         }
         tasks.push(function (next) { thinlinc.setConfig("SERVER_NAME", "desktop.karst.uits.iu.edu", next); });
         tasks.push(function (next) { thinlinc.setConfig("FULL_SCREEN_ALL_MONITORS", 0, next); });
