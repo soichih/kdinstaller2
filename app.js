@@ -10,7 +10,8 @@ const fs = require('fs');
 const electron = require('electron');
 const async = require('async');
 const request = require('request');
-const sudo = require('electron-sudo');
+//const Sudoer = require('electron-sudo');
+const sudo = require('sudo-prompt');
 const whereis = require('whereis');
 const thinlinc = require('thinlinc');
 
@@ -266,6 +267,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     function install(next) {
         $scope.progress("install", "running", "Installing ThinLink Client. Please allow administrative privilege.");
+        /*
         var options = {
             name: 'Installing ThinLinc Client',
             process: {
@@ -280,18 +282,21 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
                 }
             }
         };
-
+        */
+        //var sudo = new Sudoer.default({name: 'Installing ThinLinc Client for Karst Desktop'});
+        
         //run the installer as root
         console.log("sudo-ing "+$scope.install_cmd);
-        sudo.exec($scope.install_cmd, options, function(err, data) {
-            console.log(data); //message from installer... should I display?
-            if (err) {
+        sudo.exec($scope.install_cmd, {
+            name: "Thinlinc Install for Karst Desktop",
+            //icns: '/Applications/Electron.app/Contents/Resources/Electron.icns', // (optional)
+        }, function(err, stdout, stderr) {
+            if(err) {
                 console.dir(err);
                 $scope.error("Failed to install thinlinc client", err);
-                return;
             } else {
                 $scope.progress("install", "finished", "Installed successfully");
-                next();
+                next();  
             }
         });
     };

@@ -8,53 +8,54 @@
         <link href="styles.css" rel="stylesheet">
     </head>
     <body ng-controller="kdinstallerController as $ctrl">
-        <!--
-        <nav class="navbar navbar-default">
-            <div class="container">
-                <div class="navbar-header">
-                  <a class="navbar-brand" href="#">Karst Desktop Client Installer</a>
-                </div>
-            </div>
-        </nav>
-        -->
         <br>
 
-        <div class="container"ng-cloak>
+        <div class="container">
             <div ng-if="page == 'about'">
-                <img src="images/kdlogo.png" align="right" style="padding: 0 20px 10px 20px;" width="130px">
-                <p class="help-block">This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
-                <br clear="both">
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <form ng-submit="submit(username, password)" name="userpass">
-                            <input type="checkbox" ng-model="install_sshkey"> Install SSH keys for password-less login</input>
+                <div style="float: left; height: 300px;">
+                    <img src="images/kdlogo.png" width="100px">
+                </div>
+                <div style="margin-left: 120px">
+                    <p class="help-block">This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form ng-submit="submit(username, password)" name="userpass">
+                                <input type="checkbox" ng-model="install_sshkey"> Enable SSH key based login</input>
 
-                            <div ng-if="!install_sshkey"><br></div>
-
-                            <div ng-if="install_sshkey">
-                                <p class="help-block">Please enter your IU username / passphrase.</p>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <img src="images/iulogo.png" style="" height="18">
-                                        </span>
-                                        <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
-                                    </div>
+                                <div ng-if="!install_sshkey">
+                                    <p class="help-block">
+                                        You can enable SSH key based login if this is a trusted device, for example your personal laptop. 
+                                        Then you would not need to enter your IU password every time you login to Karst Desktop.
+                                    </p>
+                                    <br>
+                                    <br>
                                 </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
-                                        </span>
-                                        <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
+
+                                <div ng-if="install_sshkey">
+                                    <p class="help-block">Please enter your IU username / passphrase</p>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <img src="images/iulogo.png" style="" height="18">
+                                            </span>
+                                            <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
+                                        </div>
                                     </div>
-                                </div>
-                            </div><!--ng-if-->
-                            <button type="submit" class="btn pull-right" ng-disabled="userpass.$invalid">Install</button>
-                        </form>
-                     </div><!--panel-body-->
-                 </div><!--panel-->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
+                                            </span>
+                                            <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
+                                        </div>
+                                    </div>
+                                </div><!--ng-if-->
+                                <button type="submit" class="btn pull-right" ng-disabled="userpass.$invalid">Install</button>
+                            </form>
+                        </div><!--panel-body-->
+                    </div><!--panel-->
+                </div><!--col-md-8-->
             </div>
 
             <div ng-if="page == 'run'">
@@ -105,6 +106,6 @@
     </script>
 
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
     <script src="app.js"></script>
 </html>

@@ -8,6 +8,8 @@ pubdir=/home/hayashis/Dropbox/Public
 #
 #  electron-packager
 #
+# TODO - electron-packager has "osx-sign" option that seems to allow signing of the electron package
+# but it says it only works on Mac. I should try this somehow
 electron-packager . --all --out=packed --overwrite --prune
 
 ###################################################################################################
