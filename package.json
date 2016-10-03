@@ -20,7 +20,7 @@
     "regenerator-runtime": "^0.9.5",
     "request": "^2.74.0",
     "sudo-prompt": "^6.2.0",
-    "thinlinc": "^1.0.6",
+    "thinlinc": "^1.0.7",
     "whereis": "^0.4.0"
   }
 }
