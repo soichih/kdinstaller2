@@ -175,9 +175,10 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         return;
     }
 
-    $scope.submit = (username, password) => {
-        $scope.username = username;
-        $scope.password = password;
+    $scope.submit = (form) => {
+        $scope.username = form.username;
+        $scope.password = form.password;
+        $scope.install_sshkey = form.install_sshkey;
         $scope.gopage("run");
     }
 
@@ -357,6 +358,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         var tasks = [];
         
         if($scope.install_sshkey) {
+            console.debug("user requested to install ssh key");
             tasks.push(mkdir_ssh); 
             tasks.push(request_sshkeys);
             tasks.push(store_local_sshkeys);

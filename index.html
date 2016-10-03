@@ -20,24 +20,24 @@
                     <p class="help-block">This application will download and configure ThinLinc client in order to access your Karst Desktop.</p>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form ng-submit="submit(username, password)" name="userpass">
-                                <input type="checkbox" ng-model="install_sshkey"> Enable SSH key based login</input>
+                            <form ng-submit="submit(form)" name="userpass">
+                                <input type="checkbox" ng-model="form.install_sshkey"> Enable SSH key based login</input>
 
-                                <div ng-if="!install_sshkey">
+                                <div ng-if="!form.install_sshkey">
                                     <p class="help-block">
                                         You can enable SSH key based login if this is a trusted device, for example your personal laptop. 
                                         Then you would not need to enter your IU password every time you login to Karst Desktop.
                                     </p>
                                 </div>
 
-                                <div ng-if="install_sshkey">
+                                <div ng-if="form.install_sshkey">
                                     <p class="help-block">Please enter your IU username / passphrase</p>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <img src="images/iulogo.png" style="" height="18">
                                             </span>
-                                            <input id="username" type="text" class="form-control" ng-model="username" required placeholder="Username"></input>
+                                            <input id="username" type="text" class="form-control" ng-model="form.username" required placeholder="Username"></input>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -45,7 +45,7 @@
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
                                             </span>
-                                            <input type="password" class="form-control" ng-model="password" required placeholder="Passpharse"></input>
+                                            <input type="password" class="form-control" ng-model="form.password" required placeholder="Passpharse"></input>
                                         </div>
                                     </div>
                                 </div><!--ng-if-->
