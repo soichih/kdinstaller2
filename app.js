@@ -379,8 +379,8 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
             next();
         });
 
-        tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); });
         if($scope.install_sshkey) {
+            tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); });
             tasks.push(function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.username, next); });
             tasks.push(function (next) { thinlinc.setConfig("PRIVATE_KEY", $scope.private_key_path, next); });
         }
