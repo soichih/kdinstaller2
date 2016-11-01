@@ -10,24 +10,21 @@ const fs = require('fs');
 const electron = require('electron');
 const async = require('async');
 const request = require('request');
-//const Sudoer = require('electron-sudo');
 const sudo = require('sudo-prompt');
 const whereis = require('whereis');
 const thinlinc = require('thinlinc');
+const forge = require('node-forge');
 
-//TODO point it to production instance eventually
-const scapath = "https://test.sca.iu.edu/api";
+const scapath = "https://sca.iu.edu/api"; //make it configurable?
 
 //TODO maybe I should host this on IU server?
 const client_cache = "https://dl.dropboxusercontent.com/u/3209692/thinlinc/";
 
 //debug
-console.log("version");
-console.dir(process.versions);
-console.log("platform:"+os.platform());
+console.log("running on "+os.platform());
+console.log(JSON.stringify(process.versions, null, 4));
 
 window.open_devtool = function() {
-    console.log("opening console");
     electron.ipcRenderer.send('show-console');
 }
 
@@ -39,8 +36,16 @@ function get_homedir() {
 
 app.factory('sca', function($http) {
     return {
-        generate_sshkey: function() {
-            return $http.get(scapath+"/wf/resource/gensshkey");
+        generate_sshkey: function(passphrase, comment, cb) {
+            //return $http.get(scapath+"/wf/resource/gensshkey", {params: { password: password }}); //deprecated
+            console.log("generating key pair")
+            forge.pki.rsa.generateKeyPair({bits: 2048, workers: 2}, function(err, keypair) {
+                if(err) return cb(err);
+                cb(null, 
+                    forge.ssh.publicKeyToOpenSSH(keypair.publicKey, comment),
+                    forge.ssh.privateKeyToOpenSSH(keypair.privateKey, passphrase)
+                );
+            });
         } ,
         install_sshkey: function(username, password, pubkey) {
             return $http.post(scapath+"/wf/resource/installsshkey", {
@@ -85,14 +90,16 @@ app.component('progressStatus', {
 app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     $scope.gopage = (p) => {
-        console.log("gopage:"+p);
+        //console.log("gopage:"+p);
         $scope.page = p;
 
         //run things when page changes
         switch(p) {
         case "about": 
             progress_reset(); 
-            $timeout(() => $("#username").focus());
+            break;
+        case "sshkey":
+            //$timeout(() => $("#username").focus());
             break;
         case "run": 
             run(); 
@@ -108,14 +115,16 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     //platform specific config
-    $scope.install_sshkey = false;
     $scope.installer_name = null; 
     $scope.download_path = null;
     $scope.install_cmd = null;
     $scope.logo_path = null;
     $scope.tlclient_path = null;
 
-    //things we will generate
+    //form defaults
+    $scope.form = {};
+
+    //things we may generate
     $scope.private_key_path = path.join(get_homedir(), '.ssh', 'kd.id_rsa');
     $scope.public_key_path = path.join(get_homedir(), '.ssh', 'kd.id_rsa.pub');
     $scope.key = null;
@@ -152,7 +161,6 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         });
         $scope.logo_path = "/opt/thinlinc/lib/tlclient/branding.png";
         $scope.tlclient_path = "/opt/thinlinc/bin/tlclient";
-
         break;
     case "win32":
         $scope.installer_name = "windows.zip";
@@ -173,11 +181,6 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     default:
         $scope.error('Unsupported Platform: '+os.platform());
         return;
-    }
-
-    $scope.submit = (form) => {
-        for(var key in form) $scope[key] = form[key];
-        $scope.gopage("run");
     }
 
     function progress_reset() {
@@ -207,14 +210,16 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         });
     } 
 
-    function request_sshkeys(next) {
+    function generate_sshkeys(next) {
         $scope.progress("sshkey", "running", "Generating SSH Keys");
-        sca.generate_sshkey().then(function(res) {
-            $scope.key = res.data.key; 
-            $scope.pubkey = res.data.pubkey; 
-            next();
-        }, function(res) {
-            $scope.error("Failed to generate SSH Keys", res.data);
+        sca.generate_sshkey($scope.form.sshkey_passphrase, $scope.form.username+"@iu.edu (kdinstaller)", function(err, pubkey, prikey) {
+            if(err) {
+                $scope.error("Failed to generate SSH Keys", res.data);
+            } else {
+                $scope.key = prikey; 
+                $scope.pubkey = pubkey;
+                next();                
+            }
         });
     }
 
@@ -233,12 +238,13 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     function store_remote_sshkeys(next) {
         $scope.progress("sshkey", "running", "Storing public keys on karst");
-        sca.install_sshkey($scope.username, $scope.password, $scope.pubkey).then(
+        sca.install_sshkey($scope.form.username, $scope.form.password, $scope.pubkey).then(
         function(res) {
             next();
         },
         function(res) {
-            $scope.error("Failed to install SSH Keys on karst.", res.data);
+            console.dir(res);
+            $scope.error("Failed to install SSH Keys on karst.", res.data || res.statusText || "code: "+res.status);
         });
     }
 
@@ -266,24 +272,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     function install(next) {
         $scope.progress("install", "running", "Installing ThinLink Client. Please allow administrative privilege.");
-        /*
-        var options = {
-            name: 'Installing ThinLinc Client',
-            process: {
-                options: {},
-                on: function (ps) {
-                    ps.stdout.on('data', function (data) {
-                        console.log(data.toString());
-                    });
-                    ps.stderr.on('data', function (data) {
-                        console.error(data.toString());
-                    });
-                }
-            }
-        };
-        */
-        //var sudo = new Sudoer.default({name: 'Installing ThinLinc Client for Karst Desktop'});
-        
+
         //run the installer as root
         console.log("sudo-ing "+$scope.install_cmd);
         sudo.exec($scope.install_cmd, {
@@ -353,12 +342,11 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     function run() {
-        var tasks = [];
-        
-        if($scope.install_sshkey) {
+        var tasks = [];  
+        if($scope.form.install_sshkey) {
             console.debug("user requested to install ssh key");
             tasks.push(mkdir_ssh); 
-            tasks.push(request_sshkeys);
+            tasks.push(generate_sshkeys);
             tasks.push(store_remote_sshkeys);
             tasks.push(store_local_sshkeys);
             tasks.push(function (next) { 
@@ -379,9 +367,9 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
             next();
         });
 
-        if($scope.install_sshkey) {
+        if($scope.form.install_sshkey) {
             tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "publickey", next); });
-            tasks.push(function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.username, next); });
+            tasks.push(function (next) { thinlinc.setConfig("LOGIN_NAME", $scope.form.username, next); });
             tasks.push(function (next) { thinlinc.setConfig("PRIVATE_KEY", $scope.private_key_path, next); });
         } else {
             tasks.push(function (next) { thinlinc.setConfig("AUTHENTICATION_METHOD", "password", next); });

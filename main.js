@@ -29,7 +29,7 @@ let mainWindow
 
 function createWindow () {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 500, height: 410, resizable: true, maximizable: false})
+    mainWindow = new BrowserWindow({width: 500, height: 430, resizable: true, maximizable: false})
 
     //get rid of default electron menubar
     mainWindow.setMenu(null);
@@ -57,7 +57,7 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 
-// Quit when all windows are closed.
+// Quit when all windows are closed.and
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
