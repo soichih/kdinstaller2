@@ -11,13 +11,17 @@ pubdir=/home/hayashis/Dropbox/Public
 # TODO - electron-packager has "osx-sign" option that seems to allow signing of the electron package
 # but it says it only works on Mac. I should try this somehow
 electron-packager . --all --out=packed --overwrite --prune
+if [ ! $? -eq 0 ]; then
+    echo "failed to run electron-packager"
+    exit 1
+fi
 
 ###################################################################################################
 #
 #  install thinlinc cache
 #
 
-version=4.6.0
+version=4.7.0
 
 #mac....
 (cd packed/tl-$version-clients/client-osx && mkdir -p iso && fuseiso *.iso iso && cd iso && tar -czf $pubdir/thinlinc/osx.tar.gz ./ && cd .. && fusermount -u iso && rmdir iso)
