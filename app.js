@@ -212,7 +212,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     function generate_sshkeys(next) {
         $scope.progress("sshkey", "running", "Generating SSH Keys");
-        sca.generate_sshkey($scope.form.sshkey_passphrase, $scope.form.username+"@iu.edu (kdinstaller)", function(err, pubkey, prikey) {
+        sca.generate_sshkey($scope.form.passphrase, $scope.form.username+"@iu.edu (kdinstaller)", function(err, pubkey, prikey) {
             if(err) {
                 $scope.error("Failed to generate SSH Keys", res.data);
             } else {

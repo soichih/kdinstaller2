@@ -29,7 +29,7 @@ let mainWindow
 
 function createWindow () {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 500, height: 430, resizable: true, maximizable: false})
+    mainWindow = new BrowserWindow({width: 600, height: 470, resizable: true, maximizable: false})
 
     //get rid of default electron menubar
     mainWindow.setMenu(null);

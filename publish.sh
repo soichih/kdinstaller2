@@ -19,14 +19,14 @@ electron-packager . --all --out=packed --overwrite --prune
 
 version=4.6.0
 
+#mac....
+(cd packed/tl-$version-clients/client-osx && mkdir -p iso && fuseiso *.iso iso && cd iso && tar -czf $pubdir/thinlinc/osx.tar.gz ./ && cd .. && fusermount -u iso && rmdir iso)
+
 #download clients pacakge from cendio
 if [ ! -d packed/tl-${version}-clients ]; then
     echo "need to download $version"
     (cd packed && wget https://www.cendio.com/downloads/clients/tl-$version-clients.zip && unzip -n tl-$version-clients.zip && rm tl-$version-clients.zip)
 fi
-
-#mac....
-(cd packed/tl-$version-clients/client-osx && mkdir -p iso && fuseiso *.iso iso && cd iso && tar -czf $pubdir/thinlinc/osx.tar.gz ./ && cd .. && fusermount -u iso && rmdir iso)
 
 #windows...
 (cd packed/tl-$version-clients/client-windows/tl-$version-client-windows && zip -r $pubdir/thinlinc/windows.zip .)

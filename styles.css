@@ -1,6 +1,9 @@
 body {
 /*font-family: 'Lato', sans-serif;*/
 }
+.help-block {
+font-size: 90%;
+}
 
 .clickable {
   cursor: pointer;
