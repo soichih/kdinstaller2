@@ -17,7 +17,7 @@ electron-packager . --all --out=packed --overwrite --prune
 #  install thinlinc cache
 #
 
-version=4.6.0
+version=4.7.0
 
 #mac....
 (cd packed/tl-$version-clients/client-osx && mkdir -p iso && fuseiso *.iso iso && cd iso && tar -czf $pubdir/thinlinc/osx.tar.gz ./ && cd .. && fusermount -u iso && rmdir iso)

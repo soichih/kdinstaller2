@@ -167,7 +167,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
         $scope.download_path = os.tmpdir() + '/' + $scope.installer_name;
         var programfiles_dir = child_process.execSync("echo %programfiles(x86)%", { encoding: 'utf8' }).trim();
         var install_dir = programfiles_dir + "\\ThinLinc Client";
-        $scope.install_cmd = "powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('" + $scope.download_path + "', '" + install_dir + "'); }\"";
+        $scope.install_cmd = "powershell.exe -nologo -noprofile -command \"& { Add-Type -A 'System.IO.Compression.FileSystem'; Remove-Item '"+install_dir+"' -Force -Recurse; [IO.Compression.ZipFile]::ExtractToDirectory('" + $scope.download_path + "', '" + install_dir + "'); }\"";
         $scope.tlclient_path = install_dir + "\\tlclient.exe";
         $scope.logo_path = install_dir + "\\branding.png"; //TODO - not sure where this go yet..
         break;
@@ -282,7 +282,11 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
             if(err) {
                 console.dir(err);
                 $scope.error("Failed to install thinlinc client", err);
+            } else if(stderr) {
+                console.error(stderr);
+                $scope.error("Failed to install thinlinc client", stderr);
             } else {
+                console.log(stdout);
                 $scope.progress("install", "finished", "Installed successfully");
                 next();  
             }
