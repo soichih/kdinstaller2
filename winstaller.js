@@ -16,8 +16,9 @@ resultPromise = electronInstaller.createWindowsInstaller({
     authors: 'IU / SciApt',
     exe: 'kdinstall2.exe',
     setupExe: 'kdinstall2.exe',
-    //certificateFile: '/home/hayashis/.ssh/sca-code-signing.crt',
-    //certificateFile: '/home/hayashis/.ssh/sciapt_codesigning.pkcs12',
+    
+    //winstaller fails
+    //certificateFile: '/home/hayashis/.ssh/sciapt.pfx',
     //certificatePassword: fs.readFileSync('/home/hayashis/.ssh/sciapt_codesigning.pass').toString().trim(),
 });
 
