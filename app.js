@@ -250,7 +250,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
 
     function download(next) {
         //console.log("starting download");
-        $scope.progress("download", "running", "Downloading ThinLink Client");
+        $scope.progress("download", "running", "Downloading ThinLinc Client");
         fs.stat($scope.download_path, function(err, stats) {
             if (!err && stats) {
                 //console.log("skipping");
@@ -271,7 +271,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
     }
 
     function install(next) {
-        $scope.progress("install", "running", "Installing ThinLink Client. Please allow administrative privilege.");
+        $scope.progress("install", "running", "Installing ThinLinc Client. Please allow administrative privilege.");
 
         //run the installer as root
         console.log("sudo-ing "+$scope.install_cmd);
@@ -305,7 +305,7 @@ app.controller('kdinstallerController', function($scope, sca, $timeout) {
                 }
                 var entry = "[Desktop Entry]\n";
                 entry += "Name=IU Karst Desktop\n";
-                entry += "Comment=ThinLink Client for IU Karst Desktop\n";
+                entry += "Comment=ThinLinc Client for IU Karst Desktop\n";
                 entry += "Exec="+$scope.tlclient_path+"\n";
                 //entry += "Icon="+$scope.logo_path+"\n";
                 entry += "Icon=/opt/thinlinc/lib/tlclient/tlclient.svg\n";

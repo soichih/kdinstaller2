@@ -17,7 +17,7 @@
 
                 <div ng-if="page == 'about'">
                     <h3 class="text-muted">Karst Desktop Installer</h3>
-                    <p>This application will guide you through installing ThinLink client and configure in order to access <a target="_blank" href="https://kb.iu.edu/d/bfwp">Karst Desktop</a>.</p>
+                    <p>This application will guide you through installing ThinLinc client and configure in order to access <a target="_blank" href="https://kb.iu.edu/d/bfwp">Karst Desktop</a>.</p>
                     <hr>
                     <button type="button" ng-click="gopage('submit')" class="btn pull-right btn-primary">Install</button>
                 </div>
@@ -54,7 +54,7 @@
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-lock" style="width: 18px; color: #888;"></span>
                                     </span>
-                                    <input type="password" class="form-control" ng-model="form.password" required placeholder="Passpharse"></input>
+                                    <input type="password" class="form-control" ng-model="form.password" required placeholder="Passphrase"></input>
                                 </div>
                             </div>
 
@@ -96,9 +96,9 @@
 
                 <div ng-if="page == 'run'">
                     <progress-status detail="progress_detail.sshkey">Generate and Install SSH Keys</progress-status>
-                    <progress-status detail="progress_detail.download">Download ThinLink Client</progress-status>
-                    <progress-status detail="progress_detail.install">Install ThinLink Client</progress-status>
-                    <progress-status detail="progress_detail.configure">Configure ThinLink Client</progress-status>
+                    <progress-status detail="progress_detail.download">Download ThinLinc Client</progress-status>
+                    <progress-status detail="progress_detail.install">Install ThinLinc Client</progress-status>
+                    <progress-status detail="progress_detail.configure">Configure ThinLinc Client</progress-status>
                     <progress-status detail="progress_detail.desktop">Install Desktop Launcher</progress-status>
                 </div>
 
