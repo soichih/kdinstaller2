@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "async": "^2.1.2",
-    "electron": "^1.4.4",
+    "electron": "^9.1.0",
     "node-forge": "^0.6.45",
     "request": "^2.76.0",
     "sudo-prompt": "^6.2.0",
